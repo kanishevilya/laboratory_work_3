@@ -1,0 +1,55 @@
+package global;
+
+import characters.Character;
+import locations.Location;
+
+import java.util.HashMap;
+import java.util.Map;
+
+public class ManaSourse {
+    private static ManaSourse instance;
+    private static int totalMana;
+    private static int manaRegenerationRate;
+    private static Map<Location, Integer> bonusOfManaInLocations;
+
+    private ManaSourse(){
+        totalMana = 1000;
+        manaRegenerationRate = 10;
+        bonusOfManaInLocations = new HashMap<>();
+    }
+
+
+    public static ManaSourse getInstance(){
+        if(instance == null){
+            instance = new ManaSourse();
+        }
+        return instance;
+    }
+
+    public void regenerateMana(){
+        totalMana += manaRegenerationRate;
+    }
+
+    public int getAvailableManaAtLocation(Location location){
+        return bonusOfManaInLocations.getOrDefault(location, 0);
+    }
+
+    public int takeMana(Location location, int amount, Character character){
+        int bonus = getAvailableManaAtLocation(location);
+        int available = totalMana + bonus;
+        
+        if (available >= amount) {
+            totalMana -= amount;
+            return amount;
+        }
+        return 0;
+    }
+
+    public int getTotalMana(){
+        return totalMana;
+    }
+    
+    public void setManaBonus(Location location, int bonus) {
+        bonusOfManaInLocations.put(location, bonus);
+    }
+}
