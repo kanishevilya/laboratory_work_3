@@ -47,7 +47,7 @@ public class Shop extends Building {
     }
 
     public boolean purchaseItem(Character character, Item item) {
-        if(character.getCoinPurse().spendCopper(item.getValue())){
+        if(availableItems.contains(item) && character.getCoinPurse().spendCopper(item.getValue())){
             item.transferTo(character);
             removeItem(item);
             return true;

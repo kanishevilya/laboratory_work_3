@@ -104,8 +104,8 @@ public class Wizard extends Character implements MagicUser {
             int spellPower = spell.getPower();
             if (staff != null) {
                 spellPower = staff.amplifySpell(spell);
+                staff.invokeSpecialEffect(character);
             }
-            staff.invokeSpecialEffect(character);
             switch (spell.getSpellType()) {
                 case Attack:
                     character.setHealth(character.getHealth() - spellPower);

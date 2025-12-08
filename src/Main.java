@@ -133,16 +133,16 @@ public class Main {
         saruman.moveTo(secondFloor);
 
         saruman.speak(gandalf, "Вот ты и пришёл, Гэндальф.");
-        gandalf.viewReceivedMessage();
+        gandalf.viewReceivedMessages();
 
         gandalf.speak(saruman, "Да, пришёл. Пришёл за обещанной помощью, Саруман Белый.");
-        saruman.viewReceivedMessage();
+        saruman.viewReceivedMessages();
 
         saruman.setRage(new Event("Ярость из-за обращения к Саруману",
                 orthanc, Reason.HeardSomething, List.of(saruman)));
 
         saruman.speak(gandalf, "Неужто за помощью, Гэндальф Серый? Кто бы мог подумать!");
-        gandalf.viewReceivedMessage();
+        gandalf.viewReceivedMessages();
 
         EventsManager.getInstance().executeEvents();
     }

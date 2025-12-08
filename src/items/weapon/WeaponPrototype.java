@@ -3,5 +3,5 @@ package items.weapon;
 import characters.Character;
 
 public interface WeaponPrototype {
-    public WeaponPrototype clone(Character owner);
+    WeaponPrototype clone(Character owner);
 }
