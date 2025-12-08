@@ -5,7 +5,6 @@ import items.economy.CoinPurse;
 import locations.Location;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -20,13 +19,13 @@ public abstract class Character {
     protected boolean isAlive;
 
     protected Inventory inventory;
+    protected DialogueHelper dialogueHelper;
 
     protected boolean isFear;
     protected Event eventForFear;
     protected boolean isRage;
     protected Event eventForRage;
     protected int fatigue;
-    protected Map<Character, List<String>> receivedMessages;
 
     protected List<Location> inaccessibleLocations;
 
@@ -37,16 +36,15 @@ public abstract class Character {
         this.maxHealth = health;
         this.currentLocation = currentLocation;
         this.isAlive = isAlive;
-//        this.bag = bag;
         this.isFear = isFear;
+
+        this.inventory = new Inventory(this, bag, coinPurse);
+        this.dialogueHelper = new DialogueHelper();
+
         this.eventForFear = null;
         this.isRage = false;
         this.eventForRage = null;
         this.fatigue = fatigue;
-//        this.coinPurse = coinPurse;
-//        this.equipment = new ArrayList<>();
-
-        this.receivedMessages = new HashMap<>();
         this.inaccessibleLocations = new ArrayList<>();
     }
 
@@ -91,12 +89,10 @@ public abstract class Character {
     }
 
     public void addItemToBag(Item item) {
-        item.setOwnerWithTransfer(this);
         inventory.addItemToBag(item);
     }
 
     public void removeItemFromBag(Item item) {
-        item.setOwnerWithTransfer(null);
         inventory.removeItemFromBag(item);
     }
 
@@ -141,7 +137,7 @@ public abstract class Character {
     }
 
     public Map<Character, List<String>> getReceivedMessages() {
-        return receivedMessages;
+        return dialogueHelper.getReceivedMessages();
     }
 
 
@@ -169,24 +165,11 @@ public abstract class Character {
     }
 
     public void speak(Character recipient, String message) {
-        Map<Character, List<String>> messages = recipient.getReceivedMessages();
-        if (messages.get(recipient) != null) {
-            messages.get(recipient).add(message);
-        } else {
-            List<String> initialMessages = new ArrayList<>();
-            initialMessages.add(message);
-            messages.put(recipient, initialMessages);
-        }
+        dialogueHelper.speak(recipient, message);
     }
 
     public void viewReceivedMessages() {
-        for (Character character : receivedMessages.keySet()) {
-            System.out.println(character.getName() + ": ");
-            for (String message : receivedMessages.get(character)) {
-                System.out.println("\t" + message);
-            }
-        }
-        receivedMessages.clear();
+        dialogueHelper.viewReceivedMessages();
     }
 
     public boolean hasAccessTo(Location location) {
