@@ -1,7 +1,6 @@
 package locations.districts;
 
 import buildings.Building;
-import characters.Character;
 import enums.BuildingType;
 import enums.LocationType;
 import locations.Location;
@@ -11,31 +10,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class City extends Location {
-    protected List<Gate> gates;
-    protected Country country;
-    protected List<Building> buildings;
+    protected final List<Gate> gates;
+    protected final Country country;
+    protected final List<Building> buildings;
 
-    public City(String name, String description, Location parentLocation, List<Character> characters,
-            List<Location> neighboringLocations, List<Gate> gates, Country country, List<Building> buildings) {
-        super(name, description, LocationType.City, parentLocation, characters, neighboringLocations);
-        this.gates = gates;
-        this.country = country;
-        this.buildings = buildings;
-    }
-
-    public City(String name, String description, Location parentLocation) {
+    public City(String name, String description, Location parentLocation, Country country) {
         super(name, description, LocationType.City, parentLocation, new ArrayList<>(), new ArrayList<>());
         this.gates = new ArrayList<>();
-        this.country = null;
+        this.country = country;
         this.buildings = new ArrayList<>();
     }
 
     public List<Gate> getGates() {
         return gates;
-    }
-
-    public Country getCountry() {
-        return country;
     }
 
     public List<Building> getBuildings() {
@@ -56,9 +43,13 @@ public class City extends Location {
     }
 
     public void openGates() {
-        for (Gate gate : gates) {
-            gate.open(gate.getGuards().get(0));
+        for (Gate gate : getGates()) {
+            openGate(gate);
         }
+    }
+
+    public Country getCountry(){
+        return country;
     }
 
     public void openGate(Gate gate) {

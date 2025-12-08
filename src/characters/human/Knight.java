@@ -18,7 +18,7 @@ import buildings.training.TrainingCamp;
 
 public class Knight extends Human {
     protected int fencingSkillsLvl;
-    protected int maxFencingSkillsLvl;
+    protected final int maxFencingSkillsLvl;
     protected Armor armor;
     protected Sword sword;
     protected Country countryOfSubordinate;
@@ -30,16 +30,24 @@ public class Knight extends Human {
                 physicalDefense);
         this.fencingSkillsLvl = fencingSkillsLvl;
         this.maxFencingSkillsLvl = maxFencingSkillsLvl;
-        this.armor = armor.clone(this);
-        this.sword = sword.clone(this);
+        this.armor = armor==null ? null: armor.clone(this);
+        this.sword = sword==null? null: sword.clone(this);
         this.countryOfSubordinate = countryOfSubordinate;
     }
 
+
     public Knight(String name, int health, Location currentLocation, CoinPurse coinPurse, int strength, int greed,
-            int physicalDefense, int fencingSkillsLvl, int maxFencingSkillsLvl, Armor armor, Sword sword,
-            Country countryOfSubordinate) {
+                  int physicalDefense, int fencingSkillsLvl, int maxFencingSkillsLvl, Armor armor, Sword sword,
+                  Country countryOfSubordinate) {
         this(name, health, currentLocation, true, new ArrayList<>(), false, 0, coinPurse, strength, greed,
                 physicalDefense, fencingSkillsLvl, maxFencingSkillsLvl, armor, sword, countryOfSubordinate);
+    }
+
+    public Knight(String name, int health, Location currentLocation, CoinPurse coinPurse, int strength, int greed,
+            int physicalDefense, int fencingSkillsLvl, int maxFencingSkillsLvl,
+            Country countryOfSubordinate) {
+        this(name, health, currentLocation, true, new ArrayList<>(), false, 0, coinPurse, strength, greed,
+                physicalDefense, fencingSkillsLvl, maxFencingSkillsLvl, null, null, countryOfSubordinate);
     }
 
     public int getFencingSkillsLvl() {
@@ -83,7 +91,7 @@ public class Knight extends Human {
     }
 
     public void increaseFencingSkill() {
-        if (fencingSkillsLvl < maxFencingSkillsLvl) {
+        if (getFencingSkillsLvl() < maxFencingSkillsLvl) {
             fencingSkillsLvl++;
         }
     }
@@ -91,7 +99,7 @@ public class Knight extends Human {
     @Override
     public void attack(Character opponent) {
         int weaponDamage = (sword != null) ? sword.getSharpness() : 0;
-        int totalDamage = strength + weaponDamage + fencingSkillsLvl;
+        int totalDamage = strength + weaponDamage + getFencingSkillsLvl();
 
         int opponentDefense = opponent instanceof Human ? ((Human) opponent).getPhysicalDefense() : 0;
         if (opponent instanceof Knight) {

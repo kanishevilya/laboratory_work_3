@@ -8,9 +8,9 @@ import enums.Material;
 import items.Item;
 
 public class Staff extends Item {
-    protected int powerLvl;
-    protected Effect effect;
-    protected Material material;
+    protected final int powerLvl;
+    protected final Effect effect;
+    protected final Material material;
 
     public Staff(String name, String description, Character owner, int value, int powerLvl, Effect effect,
             Material material) {
@@ -21,28 +21,24 @@ public class Staff extends Item {
     }
 
     public int amplifySpell(Spell spell) {
-        return spell.getPower() + powerLvl;
+        return (material==Material.MagicWood ? 5:0)+ spell.power() + powerLvl;
     }
 
     public void invokeSpecialEffect(Character target) {
         switch (effect) {
             case Protection:
-                if (target instanceof Human) {
-                    Human human = (Human) target;
+                if (target instanceof Human human) {
                     human.setPhysicalDefense(human.getPhysicalDefense() + powerLvl);
-                } else if (target instanceof Wizard) {
-                    Wizard wizard = (Wizard) target;
+                } else if (target instanceof Wizard wizard) {
                     wizard.setMagicalDefence(wizard.getMagicalDefence() + powerLvl);
                 } else {
                     target.heal(powerLvl);
                 }
                 break;
             case Strength:
-                if (target instanceof Human) {
-                    Human human = (Human) target;
+                if (target instanceof Human human) {
                     human.setStrength(human.getStrength() + powerLvl);
-                } else if (target instanceof Wizard) {
-                    Wizard wizard = (Wizard) target;
+                } else if (target instanceof Wizard wizard) {
                     wizard.setMagicalRank(wizard.getMagicalRank() + powerLvl);
                 } else {
                     target.heal(powerLvl);
@@ -50,13 +46,11 @@ public class Staff extends Item {
                 break;
             case Corruption:
                 target.setHealth(Math.max(0, target.getHealth() - powerLvl));
-                if (target instanceof Human) {
-                    Human human = (Human) target;
+                if (target instanceof Human human) {
                     human.setPhysicalDefense(human.getPhysicalDefense() - powerLvl);
                     human.setStrength(human.getStrength() - powerLvl);
                 }
-                if (target instanceof Wizard) {
-                    Wizard wizard = (Wizard) target;
+                if (target instanceof Wizard wizard) {
                     wizard.setMagicalDefence(wizard.getMagicalDefence() - powerLvl);
                     wizard.setMagicalRank(wizard.getMagicalRank() - powerLvl);
                 }

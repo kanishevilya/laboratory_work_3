@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 public class Hobbit extends Character {
     protected int stealth;
-    protected int theftRate;
+    protected final int theftRate;
     protected int thirstForFood;
 
     public Hobbit(String name, int health, Location currentLocation, CoinPurse coinPurse, int stealth, int theftRate, int thirstForFood) {
@@ -28,7 +28,7 @@ public class Hobbit extends Character {
     }
 
     public boolean steal(Item item){
-        if(theftRate*Math.random()>6) {
+        if(item.getOwner() != this && (theftRate*Math.random()+getStealth() )>6 ) {
             item.transferTo(this);
             return true;
         }

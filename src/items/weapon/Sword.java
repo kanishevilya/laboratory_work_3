@@ -7,7 +7,7 @@ import items.Item;
 public class Sword extends Item implements WeaponPrototype {
     protected int sharpness;
     protected int weight;
-    protected Material material;
+    protected final Material material;
 
     public Sword(String name, String description, Character owner, int value, int sharpness, int weight,
             Material material) {
@@ -19,9 +19,9 @@ public class Sword extends Item implements WeaponPrototype {
 
     private Sword(Sword sword, Character owner) {
         super(sword.getName(), sword.getDescription(), owner, sword.getValue());
-        this.sharpness = sword.sharpness;
-        this.weight = sword.weight;
-        this.material = sword.material;
+        this.setSharpness(sword.getSharpness());
+        this.setWeight(sword.getWeight());
+        this.material = sword.getMaterial();
     }
 
     public Material getMaterial() {
@@ -44,6 +44,7 @@ public class Sword extends Item implements WeaponPrototype {
         this.weight = weight;
     }
 
+    @Override
     public Sword clone(Character owner) {
         return new Sword(this, owner);
     }

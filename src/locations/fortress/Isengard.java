@@ -7,8 +7,8 @@ import locations.districts.Country;
 import java.util.ArrayList;
 
 public class Isengard extends Country {
-    protected OrthancTower orthancTower;
-    protected Gate mainGate;
+    protected final OrthancTower orthancTower;
+    protected final Gate mainGate;
 
     public Isengard(String name, String description, Location parentLocation, OrthancTower orthancTower,
             Gate mainGate) {

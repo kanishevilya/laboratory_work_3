@@ -1,17 +1,17 @@
 package locations.districts;
 
-import characters.Character;
 import enums.LocationType;
 import locations.Location;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Country extends Location {
-    protected List<City> cities;
-    protected List<Country> allies;
+    protected final List<City> cities;
+    protected final List<Country> allies;
 
-    public Country(String name, String description, Location parentLocation, List<Character> characters, List<Location> neighboringLocations, List<City> cities, List<Country> allies) {
-        super(name, description, LocationType.Country, parentLocation, characters, neighboringLocations);
+    public Country(String name, String description, List<City> cities, List<Country> allies) {
+        super(name, description, LocationType.Country, null, new ArrayList<>(), new ArrayList<>());
         this.cities = cities;
         this.allies = allies;
     }

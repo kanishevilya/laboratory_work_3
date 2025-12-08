@@ -1,5 +1,6 @@
 package characters;
 
+import buildings.Building;
 import items.Item;
 import items.economy.CoinPurse;
 import locations.Location;
@@ -9,25 +10,23 @@ import java.util.List;
 import java.util.Map;
 
 import global.Event;
-import global.EventsManager;
 
 public abstract class Character {
-    protected String name;
+    protected final String name;
     protected int health;
-    protected int maxHealth;
+    protected final int maxHealth;
     protected Location currentLocation;
     protected boolean isAlive;
 
-    protected Inventory inventory;
-    protected DialogueHelper dialogueHelper;
+    protected final Inventory inventory;
+    protected final DialogueHelper dialogueHelper;
 
-    protected boolean isFear;
-    protected Event eventForFear;
-    protected boolean isRage;
-    protected Event eventForRage;
+    // todo: 1
+    protected final CharacterState fearState;
+    protected final CharacterState rageState;
     protected int fatigue;
 
-    protected List<Location> inaccessibleLocations;
+    protected final List<Location> inaccessibleLocations;
 
     public Character(String name, int health, Location currentLocation, boolean isAlive, List<Item> bag, boolean isFear,
             int fatigue, CoinPurse coinPurse) {
@@ -36,14 +35,13 @@ public abstract class Character {
         this.maxHealth = health;
         this.currentLocation = currentLocation;
         this.isAlive = isAlive;
-        this.isFear = isFear;
+        this.fearState = new CharacterState(isFear);
+        this.rageState = new CharacterState();
 
         this.inventory = new Inventory(this, bag, coinPurse);
+        this.setEquipment(new ArrayList<>());
         this.dialogueHelper = new DialogueHelper();
 
-        this.eventForFear = null;
-        this.isRage = false;
-        this.eventForRage = null;
         this.fatigue = fatigue;
         this.inaccessibleLocations = new ArrayList<>();
     }
@@ -56,6 +54,7 @@ public abstract class Character {
         inventory.unEquipItem(item);
     }
 
+    // TODO: 2
     public List<Item> getEquipment() {
         return inventory.getEquipment();
     }
@@ -97,7 +96,7 @@ public abstract class Character {
     }
 
     public boolean isFear() {
-        return isFear;
+        return fearState.getStateStatus();
     }
 
     public int getFatigue() {
@@ -121,15 +120,14 @@ public abstract class Character {
     }
 
     public void setFear(Event reason) {
-        eventForFear = reason;
-        isFear = true;
-        EventsManager.getInstance().registerEvent(reason);
+        fearState.setState(true, reason);
+    }
+    public void removeFear(){
+        fearState.setState(false, null);
     }
 
     public void setRage(Event reason) {
-        eventForRage = reason;
-        isRage = true;
-        EventsManager.getInstance().registerEvent(reason);
+        rageState.setState(true, reason);
     }
 
     public void setFatigue(int fatigue) {
@@ -142,6 +140,9 @@ public abstract class Character {
 
 
     public void heal(int additionalHealth) {
+        if(isFear()){
+            removeFear();
+        }
         if (health + additionalHealth > maxHealth) {
             health = maxHealth;
         } else {
@@ -150,17 +151,17 @@ public abstract class Character {
     }
 
     public void moveTo(Location location) {
-        if (!hasAccessTo(location)) {
+        // TODO: 3
+        if (inaccessibleLocations.contains(location) || !isAlive()) {
             return;
         }
-        boolean isNeighbor = currentLocation.getNeighboringLocations().contains(location);
         boolean isParent = currentLocation.getParentLocation() == location
                 || location.getParentLocation() == currentLocation;
-        if (!isNeighbor && !isParent) {
+        if (!currentLocation.getNeighboringLocations().contains(location) && !isParent) {
             return;
         }
         currentLocation.removeCharacter(this);
-        currentLocation = location;
+        setCurrentLocation(location);
         currentLocation.addCharacter(this);
     }
 
@@ -174,6 +175,10 @@ public abstract class Character {
 
     public boolean hasAccessTo(Location location) {
         return !inaccessibleLocations.contains(location);
+    }
+
+    public void observe(Building building){
+        System.out.println(building.observeBuilding());
     }
 
 }

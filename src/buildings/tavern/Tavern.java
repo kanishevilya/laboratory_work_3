@@ -8,8 +8,8 @@ import locations.Location;
 
 public class Tavern extends Building {
     protected int availableRooms;
-    protected int roomPrice;
-    protected int mealPrice;
+    protected final int roomPrice;
+    protected final int mealPrice;
     protected Character owner;
 
     public Tavern(String name, Location location, int availableRooms,
@@ -38,12 +38,12 @@ public class Tavern extends Building {
     }
 
     public void rentRoom(Character character, int nights) {
-        if (availableRooms <= 0) {
+        if (getAvailableRooms() <= 0) {
             return;
         }
 
-        int totalCost = roomPrice * nights;
-        if (character.getCoinPurse().spendCopper(totalCost)) {
+        int totalCost = getRoomPrice() * nights;
+        if (character == getOwner() || character.getCoinPurse().spendCopper(totalCost)) {
             availableRooms--;
             character.setFatigue(0);
             character.heal(10 * nights);
@@ -53,8 +53,7 @@ public class Tavern extends Building {
     public void serveMeal(Character character) {
         if (character.getCoinPurse().spendCopper(mealPrice)) {
             character.setFatigue(Math.max(0, character.getFatigue() - 20));
-            if (character instanceof Hobbit) {
-                Hobbit hobbit = (Hobbit) character;
+            if (character instanceof Hobbit hobbit) {
                 hobbit.setThirstForFood(Math.max(0, hobbit.getThirstForFood() - 30));
             }
         }

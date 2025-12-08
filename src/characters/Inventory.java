@@ -7,10 +7,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Inventory {
-    private Character owner;
-    private List<Item> bag;
+    private final Character owner;
+    private final List<Item> bag;
     private List<Item> equipment;
-    private CoinPurse coinPurse;
+    private final CoinPurse coinPurse;
 
     public Inventory(Character owner, List<Item> bag, CoinPurse coinPurse) {
         this.owner = owner;

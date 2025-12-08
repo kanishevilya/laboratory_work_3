@@ -19,9 +19,9 @@ public class Armor extends Item implements WeaponPrototype {
 
     private Armor(Armor armor, Character owner) {
         super(armor.getName(), armor.getDescription(), owner, armor.getValue());
-        this.protection = armor.protection;
-        this.weight = armor.weight;
-        this.material = armor.material;
+        this.setProtection(armor.getProtection());
+        this.setWeight(armor.getWeight());
+        this.setMaterial(armor.getMaterial());
     }
 
     public Material getMaterial() {
@@ -48,6 +48,7 @@ public class Armor extends Item implements WeaponPrototype {
         this.weight = weight;
     }
 
+    @Override
     public Armor clone(Character owner) {
         return new Armor(this, owner);
     }

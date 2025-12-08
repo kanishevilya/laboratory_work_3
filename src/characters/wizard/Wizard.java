@@ -2,7 +2,6 @@ package characters.wizard;
 
 import characters.Character;
 import global.ManaSourse;
-import items.Item;
 import items.economy.CoinPurse;
 import items.magical.Spell;
 import items.magical.Staff;
@@ -14,26 +13,13 @@ import global.Event;
 import enums.Reason;
 
 public class Wizard extends Character implements MagicUser {
-    protected String title;
+    protected final String title;
     protected Staff staff;
     protected int magicalRank;
-    protected int maxOneTimeManaForUse;
+    protected final int maxOneTimeManaForUse;
     protected int magicalDefence;
     protected int currentMana;
-    protected int maxMana;
-
-    public Wizard(String name, int health, Location currentLocation, boolean isAlive, List<Item> bag, boolean isFear,
-            int fatigue, CoinPurse coinPurse, String title, Staff staff, int magicalRank, int maxOneTimeManaForUse,
-            int magicalDefence, int currentMana, int maxMana) {
-        super(name, health, currentLocation, isAlive, bag, isFear, fatigue, coinPurse);
-        this.title = title;
-        this.staff = staff;
-        this.magicalRank = magicalRank;
-        this.maxOneTimeManaForUse = maxOneTimeManaForUse;
-        this.magicalDefence = magicalDefence;
-        this.currentMana = currentMana;
-        this.maxMana = maxMana;
-    }
+    protected final int maxMana;
 
     public Wizard(String name, int health, Location currentLocation, CoinPurse coinPurse, String title, Staff staff,
             int magicalRank, int maxOneTimeManaForUse,
@@ -53,9 +39,6 @@ public class Wizard extends Character implements MagicUser {
         return title;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
 
     public Staff getStaff() {
         return staff;
@@ -94,19 +77,19 @@ public class Wizard extends Character implements MagicUser {
     @Override
     public boolean castSpell(Spell spell, Character character) {
         rechangeMana();
-        if (spell.getManaCost() > maxOneTimeManaForUse) {
+        if (spell.manaCost() > getMaxOneTimeManaForUse()) {
             return false;
         }
 
-        if (currentMana >= spell.getManaCost()) {
-            currentMana -= spell.getManaCost();
+        if (currentMana >= spell.manaCost()) {
+            currentMana -= spell.manaCost();
 
-            int spellPower = spell.getPower();
+            int spellPower = spell.power();
             if (staff != null) {
                 spellPower = staff.amplifySpell(spell);
                 staff.invokeSpecialEffect(character);
             }
-            switch (spell.getSpellType()) {
+            switch (spell.spellType()) {
                 case Attack:
                     character.setHealth(character.getHealth() - spellPower);
                     break;
@@ -115,7 +98,7 @@ public class Wizard extends Character implements MagicUser {
                     break;
                 case Fear:
                     character.setFear(
-                            new Event("Fear spell cast", currentLocation, Reason.Magic, List.of(this, character)));
+                            new Event(List.of(this, character), currentLocation, Reason.Magic, "Fear spell cast"));
                     break;
                 case Buff:
                     character.setFatigue(character.getFatigue() - spellPower);
@@ -133,7 +116,8 @@ public class Wizard extends Character implements MagicUser {
     @Override
     public void rechangeMana() {
         int amountToTake = maxMana - currentMana;
-        int taken = ManaSourse.getInstance().takeMana(currentLocation, amountToTake, this);
+        int taken = ManaSourse.getInstance().takeMana(currentLocation, amountToTake);
         currentMana += taken;
     }
+
 }

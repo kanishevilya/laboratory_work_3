@@ -5,7 +5,7 @@ import java.util.List;
 
 public class EventsManager {
     private static EventsManager instance;
-    private List<Event> listOfEvents;
+    private final List<Event> listOfEvents;
     private int eventsCount;
 
     private EventsManager() {
@@ -26,7 +26,7 @@ public class EventsManager {
             System.out.println("Reason: " + event.getEventReason());
             System.out.println();
         }
-        triggerManaSurge(100);
+        triggerManaSurge();
         listOfEvents.clear();
     }
 
@@ -39,7 +39,7 @@ public class EventsManager {
         eventsCount++;
     }
 
-    public void triggerManaSurge(int amount) {
+    public void triggerManaSurge() {
         ManaSourse.getInstance().regenerateMana();
     }
 }

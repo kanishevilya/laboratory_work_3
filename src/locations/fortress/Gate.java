@@ -10,14 +10,7 @@ import java.util.List;
 
 public class Gate extends Location {
     protected boolean isLocked;
-    protected List<Knight> guards;
-
-    public Gate(String name, String description, Location parentLocation, List<Character> characters,
-            List<Location> neighboringLocations, boolean isLocked, List<Knight> guards) {
-        super(name, description, LocationType.Gate, parentLocation, characters, neighboringLocations);
-        this.isLocked = isLocked;
-        this.guards = guards;
-    }
+    protected final List<Knight> guards;
 
     public Gate(String name, String description, Location parentLocation) {
         super(name, description, LocationType.Gate, parentLocation, new ArrayList<>(), new ArrayList<>());
@@ -43,12 +36,12 @@ public class Gate extends Location {
 
     public void open(Character character) {
         if (checkAccess(character)) {
-            isLocked = false;
+            setLocked(false);
         }
     }
 
     public void close() {
-        isLocked = true;
+        setLocked(true);
     }
 
     public boolean checkAccess(Character character) {

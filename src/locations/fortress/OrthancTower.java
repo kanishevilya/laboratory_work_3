@@ -8,18 +8,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class OrthancTower extends Location {
-    protected int height;
-    protected List<Wizard> residentWizards;
+    protected final List<Wizard> residentWizards;
 
-    public OrthancTower(String name, String description, LocationType locationType, Location parentLocation,
-            int height) {
+    public OrthancTower(String name, String description, LocationType locationType, Location parentLocation) {
         super(name, description, locationType, parentLocation, new ArrayList<>(), new ArrayList<>());
-        this.height = height;
         this.residentWizards = new ArrayList<>();
-    }
-
-    public int getHeight() {
-        return height;
     }
 
     public List<Wizard> getResidentWizards() {

@@ -4,10 +4,10 @@ import characters.Character;
 import items.Item;
 
 public class Letter extends Item {
-    protected String title;
+    protected final String title;
     protected String content;
-    protected Character sender;
-    protected Character recipient;
+    protected final Character sender;
+    protected final Character recipient;
     protected boolean isWasOpen;
     protected Character entrustTo;
 

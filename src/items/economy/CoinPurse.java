@@ -2,7 +2,6 @@ package items.economy;
 
 public class CoinPurse {
     public static final int CopperInSilver = 100;
-    public static final int SilverInGold = 10;
     public static final int CopperInGold = 1000;
 
     protected int gold;
@@ -13,18 +12,6 @@ public class CoinPurse {
         this.gold = gold;
         this.silver = silver;
         this.copper = copper;
-    }
-
-    public int getGold() {
-        return gold;
-    }
-
-    public int getSilver() {
-        return silver;
-    }
-
-    public int getCopper() {
-        return copper;
     }
 
     public int getTotalInCopper() {
@@ -57,14 +44,6 @@ public class CoinPurse {
         total -= valInCopper;
         convertValues(total);
         return true;
-    }
-
-    public boolean spendGold(int amount) {
-        return spendValue(amount, CopperInGold);
-    }
-
-    public boolean spendSilver(int amount) {
-        return spendValue(amount, CopperInSilver);
     }
 
     public boolean spendCopper(int amount) {

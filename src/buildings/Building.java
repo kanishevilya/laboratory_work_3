@@ -4,9 +4,9 @@ import enums.BuildingType;
 import locations.Location;
 
 public abstract class Building {
-    protected String name;
-    protected BuildingType buildingType;
-    protected Location location;
+    protected final String name;
+    protected final BuildingType buildingType;
+    protected final Location location;
     protected boolean isOpen;
 
     public Building(String name, BuildingType buildingType, Location location, boolean isOpen) {
@@ -34,5 +34,9 @@ public abstract class Building {
 
     public void setOpen(boolean open){
         isOpen=open;
+    }
+
+    public String observeBuilding(){
+        return getName()+" in location "+getLocation();
     }
 }

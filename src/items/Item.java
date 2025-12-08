@@ -3,8 +3,8 @@ package items;
 import characters.Character;
 
 public abstract class Item {
-    protected String name;
-    protected String description;
+    protected final String name;
+    protected final String description;
     protected Character owner;
     protected int value;
 

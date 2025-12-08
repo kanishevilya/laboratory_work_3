@@ -1,6 +1,5 @@
 package global;
 
-import characters.Character;
 import locations.Location;
 
 import java.util.HashMap;
@@ -34,9 +33,9 @@ public class ManaSourse {
         return bonusOfManaInLocations.getOrDefault(location, 0);
     }
 
-    public int takeMana(Location location, int amount, Character character){
+    public int takeMana(Location location, int amount){
         int bonus = getAvailableManaAtLocation(location);
-        int available = totalMana + bonus;
+        int available = getTotalMana() + bonus;
         
         if (available >= amount) {
             totalMana -= amount;

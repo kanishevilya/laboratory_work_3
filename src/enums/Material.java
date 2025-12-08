@@ -5,7 +5,5 @@ public enum Material {
     MagicWood,
     Metal,
     MagicMetal,
-    Mithril,
     Gold,
-    Silver
 }

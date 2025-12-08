@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 public class DialogueHelper {
-    private Map<Character, List<String>> receivedMessages;
+    private final Map<Character, List<String>> receivedMessages;
 
     public DialogueHelper() {
         this.receivedMessages = new HashMap<>();
@@ -17,7 +17,7 @@ public class DialogueHelper {
     }
 
     public void speak(Character recipient, String message) {
-        Map<Character, List<String>> messages = recipient.getReceivedMessages();
+        Map<Character, List<String>> messages = recipient.dialogueHelper.getReceivedMessages();
         if (messages.get(recipient) != null) {
             messages.get(recipient).add(message);
         } else {

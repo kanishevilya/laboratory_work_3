@@ -7,9 +7,9 @@ import items.Item;
 
 public class MagicalRing extends Item {
     protected int powerLvl;
-    protected Effect specialEffect;
-    protected Material material;
-    protected int influenceOnOwner;
+    protected final Effect specialEffect;
+    protected final Material material;
+    protected final int influenceOnOwner;
     protected boolean isEquipped;
 
     public MagicalRing(String name, String description, Character owner, int value, int powerLvl, Effect specialEffect, Material material, int influenceOnOwner, boolean isEquipped) {

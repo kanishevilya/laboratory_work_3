@@ -12,8 +12,8 @@ import java.util.List;
 import java.util.Map;
 
 public class Shop extends Building {
-    protected List<Item> availableItems;
-    protected Map<Item, Integer> prices;
+    protected final List<Item> availableItems;
+    protected final Map<Item, Integer> prices;
 
     public Shop(String name, Location location) {
         super(name, BuildingType.Shop, location, true);
@@ -46,13 +46,11 @@ public class Shop extends Building {
         prices.put(item, price);
     }
 
-    public boolean purchaseItem(Character character, Item item) {
-        if(availableItems.contains(item) && character.getCoinPurse().spendCopper(item.getValue())){
+    public void purchaseItem(Character character, Item item) {
+        if(getAvailableItems().contains(item) && getPrice(item) < character.getCoinPurse().getTotalInCopper()){
             item.transferTo(character);
             removeItem(item);
-            return true;
         }
-        return false;
     }
 
     public void sellItem(Character character, Item item) {

@@ -7,12 +7,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class Location {
-    protected String name;
-    protected String description;
+    protected final String name;
+    protected final String description;
     protected LocationType locationType;
     protected Location parentLocation;
-    protected List<Character> characters;
-    protected List<Location> neighboringLocations;
+    protected final List<Character> characters;
+    protected final List<Location> neighboringLocations;
 
     public Location(String name, String description, LocationType locationType, Location parentLocation,
             List<Character> characters, List<Location> neighboringLocations) {

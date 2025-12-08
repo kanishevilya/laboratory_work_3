@@ -13,6 +13,10 @@ public class TrainingCamp extends Building {
         this.trainingCost = trainingCost;
     }
 
+    public void changeTrainingCost(int newCost){
+        trainingCost=newCost;
+    }
+
     public void train(Knight knight) {
         if (!isOpen) {
             return;
