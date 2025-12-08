@@ -18,15 +18,14 @@ public abstract class Character {
     protected int maxHealth;
     protected Location currentLocation;
     protected boolean isAlive;
-    protected List<Item> bag;
-    protected List<Item> equipment;
+
+    protected Inventory inventory;
 
     protected boolean isFear;
     protected Event eventForFear;
     protected boolean isRage;
     protected Event eventForRage;
     protected int fatigue;
-    protected CoinPurse coinPurse;
     protected Map<Character, List<String>> receivedMessages;
 
     protected List<Location> inaccessibleLocations;
@@ -38,32 +37,33 @@ public abstract class Character {
         this.maxHealth = health;
         this.currentLocation = currentLocation;
         this.isAlive = isAlive;
-        this.bag = bag;
+//        this.bag = bag;
         this.isFear = isFear;
         this.eventForFear = null;
         this.isRage = false;
         this.eventForRage = null;
         this.fatigue = fatigue;
-        this.coinPurse = coinPurse;
-        this.equipment = new ArrayList<>();
+//        this.coinPurse = coinPurse;
+//        this.equipment = new ArrayList<>();
+
         this.receivedMessages = new HashMap<>();
         this.inaccessibleLocations = new ArrayList<>();
     }
 
     public void equipItem(Item item) {
-        equipment.add(item);
+        inventory.equipItem(item);
     }
 
     public void unEquipItem(Item item) {
-        equipment.remove(item);
+        inventory.unEquipItem(item);
     }
 
     public List<Item> getEquipment() {
-        return equipment;
+        return inventory.getEquipment();
     }
 
     public void setEquipment(List<Item> equipment) {
-        this.equipment = equipment;
+        this.inventory.setEquipment(equipment);
     }
 
     public String getName() {
@@ -87,17 +87,17 @@ public abstract class Character {
     }
 
     public List<Item> getBag() {
-        return bag;
+        return inventory.getBag();
     }
 
     public void addItemToBag(Item item) {
         item.setOwnerWithTransfer(this);
-        bag.add(item);
+        inventory.addItemToBag(item);
     }
 
     public void removeItemFromBag(Item item) {
         item.setOwnerWithTransfer(null);
-        bag.remove(item);
+        inventory.removeItemFromBag(item);
     }
 
     public boolean isFear() {
@@ -109,7 +109,7 @@ public abstract class Character {
     }
 
     public CoinPurse getCoinPurse() {
-        return coinPurse;
+        return inventory.getCoinPurse();
     }
 
     public void setHealth(int health) {
@@ -144,15 +144,6 @@ public abstract class Character {
         return receivedMessages;
     }
 
-    public void viewReceivedMessage() {
-        for (Character character : receivedMessages.keySet()) {
-            System.out.println(character.name + ": ");
-            for (String message : receivedMessages.get(character)) {
-                System.out.println("\t" + message);
-            }
-        }
-        receivedMessages = new HashMap<>();
-    }
 
     public void heal(int additionalHealth) {
         if (health + additionalHealth > maxHealth) {
@@ -186,6 +177,16 @@ public abstract class Character {
             initialMessages.add(message);
             messages.put(recipient, initialMessages);
         }
+    }
+
+    public void viewReceivedMessages() {
+        for (Character character : receivedMessages.keySet()) {
+            System.out.println(character.getName() + ": ");
+            for (String message : receivedMessages.get(character)) {
+                System.out.println("\t" + message);
+            }
+        }
+        receivedMessages.clear();
     }
 
     public boolean hasAccessTo(Location location) {
