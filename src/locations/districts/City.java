@@ -55,4 +55,9 @@ public class City extends Location {
     public void openGate(Gate gate) {
         gate.open(gate.getGuards().get(0));
     }
+
+    @Override
+    public String observeLocation(){
+        return super.observeLocation()+ " Country: "+getCountry();
+    }
 }

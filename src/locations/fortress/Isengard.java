@@ -12,8 +12,7 @@ public class Isengard extends Country {
 
     public Isengard(String name, String description, Location parentLocation, OrthancTower orthancTower,
             Gate mainGate) {
-        super(name, description, parentLocation, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(),
-                new ArrayList<>());
+        super(name, description, new ArrayList<>(), new ArrayList<>());
         this.locationType = LocationType.Fortress;
         this.orthancTower = orthancTower;
         this.mainGate = mainGate;

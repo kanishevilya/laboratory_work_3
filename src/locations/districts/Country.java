@@ -24,14 +24,27 @@ public class Country extends Location {
         return allies;
     }
 
-    public void addCity(City city){
+    public void addCity(City city) {
         cities.add(city);
     }
 
-    public void addAlly(Country ally){
-        allies.add(ally);
+    public void addAlly(Country ally) {
+        if (!allies.contains(ally)) {
+            allies.add(ally);
+            ally.addAlly(this);
+        }
     }
-    public void removeAlly(Country ally){
-        allies.remove(ally);
+
+    public void removeAlly(Country ally) {
+        if (allies.contains(ally)) {
+            allies.remove(ally);
+            ally.removeAlly(this);
+        }
+    }
+
+    @Override
+    public String observeLocation() {
+        return super.observeLocation() + " Allies amount: " + getAllies().size() + " Cities amount: "
+                + getCities().size();
     }
 }

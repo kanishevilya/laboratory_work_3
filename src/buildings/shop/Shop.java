@@ -2,9 +2,11 @@ package buildings.shop;
 
 import buildings.Building;
 import characters.Character;
+import characters.hobbit.Hobbit;
 import enums.BuildingType;
 import items.Item;
 import locations.Location;
+import exceptions.InventoryFullException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -36,7 +38,7 @@ public class Shop extends Building {
     }
 
     public int getPrice(Item item) {
-        return item.getValue();
+        return prices.getOrDefault(item, item.getValue());
     }
 
     public void setPrice(Item item, int price) {
@@ -46,17 +48,37 @@ public class Shop extends Building {
         prices.put(item, price);
     }
 
-    public void purchaseItem(Character character, Item item) {
-        if(getAvailableItems().contains(item) && getPrice(item) < character.getCoinPurse().getTotalInCopper()){
+    public void purchaseItem(Character character, Item item) throws InventoryFullException {
+        if (character.isRage()) {
+            return;
+        }
+
+        if (character instanceof Hobbit hobbit) {
+            if (hobbit.steal(item)) {
+                removeItem(item);
+                return;
+            }
+        }
+
+        if (!getAvailableItems().contains(item)) {
+            return;
+        }
+
+        int finalPrice = getPrice(item);
+
+        if (finalPrice <= character.getCoinPurse().getTotalInCopper()) {
+            character.getCoinPurse().spendCopper(finalPrice);
             item.transferTo(character);
             removeItem(item);
         }
     }
 
     public void sellItem(Character character, Item item) {
+        int sellPrice = item.getValue();
+
         character.removeItemFromBag(item);
         addItem(item, item.getValue());
-        character.getCoinPurse().addCopper(item.getValue());
+        character.getCoinPurse().addCopper(sellPrice);
     }
 
 }
