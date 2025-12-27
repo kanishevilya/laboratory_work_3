@@ -1,21 +1,22 @@
-import buildings.training.TrainingCamp;
 import characters.hobbit.Hobbit;
 import characters.human.Human;
 import characters.human.Knight;
 import characters.wizard.Wizard;
 import enums.*;
+import exceptions.AccessDeniedException;
+import exceptions.InventoryFullException;
 import global.Event;
 import global.EventsManager;
-import global.ManaSourse;
+import global.ManaSource;
 import items.documents.Letter;
 import items.economy.CoinPurse;
 import items.magical.MagicalRing;
+import items.magical.Spell;
 import items.magical.Staff;
 import items.weapon.Armor;
 import items.weapon.Sword;
 import locations.Location;
 import locations.districts.City;
-
 import locations.districts.Country;
 import locations.fortress.Gate;
 import locations.fortress.Isengard;
@@ -48,20 +49,24 @@ public class Main {
                 "Каменное плато, окружённое горами.",
                 null,
                 orthanc,
-                isengardGate
-        );
+                isengardGate);
 
         orthanc.setParentLocation(isengard);
         isengardGate.setParentLocation(isengard);
         orthanc.addNeighboringLocation(isengardGate);
-        orthanc.addNeighboringLocation(isengardGate);
         bree.addNeighboringLocation(isengardGate);
 
-        ManaSourse.getInstance().setManaBonus(orthanc, 500);
+        ManaSource.getInstance().setManaBonus(orthanc, 500);
 
         CoinPurse gandalfPurse = new CoinPurse(1, 10, 50);
-        Staff gandalfStaff = new Staff("Посох Гэндальфа", "Старый деревянный посох",
-                null, 100, 50, Effect.Protection, Material.Wood);
+        Staff gandalfStaff;
+        try {
+            gandalfStaff = new Staff("Посох Гэндальфа", "Старый деревянный посох",
+                    null, 100, 50, Effect.Protection, Material.Wood);
+        } catch (InventoryFullException e) {
+            System.out.println(e.getMessage());
+            return;
+        }
 
         Wizard gandalf = new Wizard("Гэндальф Серый", 100, bree, gandalfPurse, "Серый",
                 gandalfStaff, 10, 100, 50, 100, 100);
@@ -74,37 +79,83 @@ public class Main {
         tavern.changeOwner(innkeeper);
 
         CoinPurse sarumanPurse = new CoinPurse(1, 500, 1000);
-        Staff sarumanStaff = new Staff("Посох Сарумана", "Белый посох",
-                null, 200, 80, Effect.Corruption, Material.Metal);
+        Staff sarumanStaff;
+        try {
+            sarumanStaff = new Staff("Посох Сарумана", "Белый посох",
+                    null, 200, 80, Effect.Corruption, Material.Metal);
+        } catch (InventoryFullException e) {
+            System.out.println(e.getMessage());
+            return;
+        }
 
         Wizard saruman = new Wizard("Саруман Белый", 150, orthanc, sarumanPurse,
                 "Белый", sarumanStaff, 20, 200, 80, 200, 200);
         orthanc.addCharacter(saruman);
         orthanc.addWizard(saruman);
 
-        MagicalRing ring = new MagicalRing("Кольцо силы", "Малое кольцо власти",
-                saruman, 1000, 5, Effect.Corruption, Material.MagicMetal, 10, false);
-        ring.equip();
+        MagicalRing ring;
+        try {
+            ring = new MagicalRing("Кольцо силы", "Малое кольцо власти", saruman, 1000, 5,
+                    Material.MagicMetal, 10, false);
+        } catch (InventoryFullException e) {
+            System.out.println(e.getMessage());
+            return;
+        }
+        if (!saruman.isEquip(ring)) {
+            ring.equip();
+        }
 
-        Armor armorPrototype = new Armor("Броня", "Броня", null, 100, 50, 40, Material.Metal);
-        Sword swordPrototype = new Sword("Меч", "Меч", null, 100, 50, 40, Material.Metal);
+        Armor armorPrototype;
+        try {
+            armorPrototype = new Armor("Броня", "Броня", null, 100, 50, 40, Material.Metal);
+        } catch (InventoryFullException e) {
+            System.out.println(e.getMessage());
+            return;
+        }
+        Sword swordPrototype;
+        try {
+            swordPrototype = new Sword("Меч", "Меч", null, 100, 50, 40, Material.Metal);
+        } catch (InventoryFullException e) {
+            System.out.println(e.getMessage());
+            return;
+        }
 
         CoinPurse guardPurse = new CoinPurse(1, 1, 10);
-        Knight guard1 = new Knight("Орк страж 1", 80, isengardGate, guardPurse, 20,
-                50, 20, 2, 100, armorPrototype, swordPrototype, isengard);
+        Knight guard1;
+        try {
+            guard1 = new Knight("Орк страж 1", 80, isengardGate, guardPurse, 20,
+                    50, 20, 2, 100, armorPrototype, swordPrototype, isengard);
+        } catch (InventoryFullException e) {
+            System.out.println(e.getMessage());
+            return;
+        }
         isengardGate.addCharacter(guard1);
         isengardGate.addGuard(guard1);
 
         gandalf.setFatigue(90);
 
-        CoinPurse frodoPurse = new CoinPurse(0,0,10);
-        Hobbit frodo = new Hobbit("Фродо", 100, null, frodoPurse, 100, 70, 20 );
+        CoinPurse frodoPurse = new CoinPurse(0, 0, 10);
+        Hobbit frodo = new Hobbit("Фродо", 100, null, frodoPurse, 100, 70, 20);
 
-        Letter letter = new Letter("Письмо Фродо", "Срочное сообщение",
-                0, "Беги!", "Уходи из Шира!", gandalf, frodo);
-        gandalf.addItemToBag(letter);
+        Letter letter;
+        try {
+            letter = new Letter("Письмо Фродо", "Срочное сообщение",
+                    0, "Беги!", "Уходи из Шира!", gandalf, frodo);
+        } catch (InventoryFullException e) {
+            System.out.println(e.getMessage());
+            return;
+        }
+        try {
+            gandalf.addItemToBag(letter);
+        } catch (InventoryFullException e) {
+            System.out.println(e.getMessage());
+        }
         gandalf.removeItemFromBag(letter);
-        letter.entrustTo(innkeeper);
+        try {
+            letter.entrustTo(innkeeper);
+        } catch (InventoryFullException e) {
+            System.out.println(e.getMessage());
+        }
 
         gandalf.moveTo(isengardGate);
 
@@ -121,14 +172,16 @@ public class Main {
         Location firstFloor = new Location("Первый этаж", "Первый этаж Ортханка.",
                 LocationType.Castle, orthanc,
                 new ArrayList<>(List.of(saruman)),
-                new ArrayList<>(List.of(orthanc))) {};
+                new ArrayList<>(List.of(orthanc))) {
+        };
 
         gandalf.moveTo(firstFloor);
 
         Location secondFloor = new Location("Второй этаж", "Второй этаж Ортханка.",
                 LocationType.Castle, orthanc,
                 new ArrayList<>(),
-                new ArrayList<>(List.of(firstFloor))) {};
+                new ArrayList<>(List.of(firstFloor))) {
+        };
 
         firstFloor.addNeighboringLocation(secondFloor);
         gandalf.moveTo(secondFloor);
@@ -145,70 +198,134 @@ public class Main {
 
         saruman.speak(gandalf, "Неужто за помощью, Гэндальф Серый? Кто бы мог подумать!");
         gandalf.viewReceivedMessages();
+        ring.unEquip();
 
-
-        ExampleOfShop();
-        ExampleOfTraining();
-        ExampleOfTavern();
         EventsManager.getInstance().executeEvents();
+
+        demo();
     }
 
-    public static void ExampleOfShop(){
-        Country gondor = new Country("Gondor", "Humans Country", null, null);
-        City mainCity = new City("MainCity", "MainCity of Goundor", gondor, gondor);
-        mainCity.openGates();
-        gondor.addCity(mainCity);
+    private static void demo() {
+        System.out.println("Демо остальных функций");
+        Country gondor = new Country("Гондор", "Королевство людей", null, null);
+        City minas = new City("Минас Тирит", "Столица Гондора", gondor, gondor);
 
-        Human human= new Human("Ilya", 100, mainCity, new CoinPurse(0,0,100), 100,100,100);
-
-        Shop shop = new Shop("ShopInShir", mainCity);
-        human.observe(shop);
+        Shop shop = new Shop("Лавка оружейника", minas);
         shop.setOpen(true);
-        Armor armor = new Armor("Gold armor", "Armor from gold",null, 10000, 100, 20, Material.Gold);
-        armor.setValue(5000);
-        shop.addItem(armor, armor.getValue());
 
-        shop.purchaseItem(human, armor);
-        shop.sellItem(human, armor);
-        shop.setPrice(armor, shop.getPrice(armor)*2);
-    }
+        Human greedyMerchant = new Human("Жадный торговец", 100, minas, new CoinPurse(10, 10, 10), 50, 80, 50);
+        Armor goldenArmor;
+        try {
+            goldenArmor = new Armor("Золотой доспех", "Блестящий", null, 1000, 30, 15, Material.Gold);
+        } catch (InventoryFullException e) {
+            System.out.println(e.getMessage());
+            return;
+        }
+        shop.addItem(goldenArmor, 500);
 
-    public static void ExampleOfTraining(){
-        Country rohan = new Country("Rohan", "Rohan country", null, null);
-        City rohanCity = new City("Rohans Main city", "City from Rohan", rohan, rohan);
-        rohan.addCity(rohanCity);
-        TrainingCamp camp = new TrainingCamp("Camp", BuildingType.TrainingCamp, rohanCity, false, 0);
-        camp.changeTrainingCost(1000);
-        Knight knight = new Knight("Ilya", 100, rohanCity, new CoinPurse(100,100,100), 100, 10, 100, 10,100, rohan);
-        knight.setArmor(new Armor("Steel Armor", "Armor from Steel", knight,  300, 100, 20, Material.Metal));
-        knight.setSword(new Sword("Steel Sword", "Sword from Steel", knight,  100, 100, 5, Material.Metal));
+        greedyMerchant.getCoinPurse().addCopper(600);
+        try {
+            shop.purchaseItem(greedyMerchant, goldenArmor);
+        } catch (InventoryFullException e) {
+            System.out.println(e.getMessage());
+            return;
+        }
+        shop.sellItem(greedyMerchant, goldenArmor);
 
-        knight.learnFencing();
-    }
+        Knight aragorn;
+        try {
+            aragorn = new Knight("Арагорн", 120, minas, true, new ArrayList<>(), false, 0,
+                    new CoinPurse(50, 50, 50), 90, 50, 70, 80, 100, null, null, gondor);
+        } catch (InventoryFullException e) {
+            System.out.println(e.getMessage());
+            return;
+        }
+        Knight orc;
+        try {
+            orc = new Knight("Орк", 100, minas, true, new ArrayList<>(), false, 0,
+                    new CoinPurse(0, 0, 0), 80, 0, 40, 50, 100, null, null, null);
+        } catch (InventoryFullException e) {
+            System.out.println(e.getMessage());
+            return;
+        }
 
-    public static void ExampleOfTavern(){
-        Country rivendell = new Country("Rivendell", "Rivendell country", null, null);
-        City rivendellCity = new City("Rivendell Main city", "City from Rivendell", rivendell, rivendell);
-        rivendell.addCity(rivendellCity);
-        Human owner= new Human("Owner Ilya", 100, rivendellCity, new CoinPurse(0,0,100), 100,100,100);
-        Human human= new Human("Aragorn", 100, rivendellCity, new CoinPurse(0,4,100), 100,100,100);
+        orc.setRage(new Event(List.of(orc), minas, Reason.SawSomething, "Увидел врага"));
+        System.out.println("Орк в ярости: " + orc.isRage());
 
-        Tavern tavern = new Tavern("Best Tavern", rivendellCity, 10, 100,10, owner);
-        tavern.rentRoom(human, 1);
-        tavern.serveMeal(human);
-    }
+        int hpBefore = aragorn.getHealth();
+        orc.attack(aragorn);
+        System.out.println("Урон от ярости: " + (hpBefore - aragorn.getHealth()));
 
-    public static void ExampleOfWizard(){
-        Country rivendell = new Country("Rivendell", "Rivendell country", null, null);
-        City rivendellCity = new City("Rivendell Main city", "City from Rivendell", rivendell, rivendell);
-        rivendell.addCity(rivendellCity);
+        aragorn.setFear(new Event(List.of(aragorn), minas, Reason.SawSomething, "Испуг"));
+        aragorn.attack(orc);
 
-        Staff gandalfStaff = new Staff("Посох Гэндальфа", "Старый деревянный посох",
-                null, 100, 50, Effect.Protection, Material.MagicWood);
+        Hobbit frodo = new Hobbit("Фродо", 80, minas, new CoinPurse(5, 5, 5), 60, 30, 20);
+        Sword sword;
+        try {
+            sword = new Sword("Меч", "Меч", null, 200, 80, 30, Material.MagicMetal);
+        } catch (InventoryFullException e) {
+            System.out.println(e.getMessage());
+            return;
+        }
 
-        Wizard gandalf = new Wizard("Гэндальф Серый", 100, rivendell, new CoinPurse(100,100,100), "Серый",
-                gandalfStaff, 10, 100, 50, 100, 100);
+        try {
+            aragorn.addItemToBag(sword);
+        } catch (InventoryFullException e) {
+            System.out.println(e.getMessage());
+            return;
+        }
 
+        Hobbit sam = new Hobbit("Сэм", 85, minas, new CoinPurse(3, 3, 3), 50, 25, 5);
+        System.out.println("Голод: " + sam.getThirstForFood());
 
+        City bree = new City("Бри", "Город", gondor, gondor);
+        minas.addNeighboringLocation(bree);
+        sam.moveTo(bree);
+        System.out.println("После пути: " + sam.getThirstForFood());
+
+        Tavern tavern = new Tavern("Таверна", bree, 5, 50, 20, greedyMerchant);
+        tavern.setOpen(true);
+        tavern.serveMeal(sam);
+
+        Country mordor = new Country("Мордор", "Темная страна", null, null);
+        Gate blackGate = new Gate("Черные врата", "Врата Мордора", mordor);
+
+        try {
+            blackGate.checkAccess(aragorn);
+        } catch (AccessDeniedException e) {
+            System.out.println(e.getMessage());
+            return;
+        }
+
+        Staff staff;
+        try {
+            staff = new Staff("Посох", "Магический", null, 1000, 100, Effect.Protection,
+                    Material.MagicWood);
+        } catch (InventoryFullException e) {
+            System.out.println(e.getMessage());
+            return;
+        }
+        Wizard gandalf = new Wizard("Гэндальф", 150, minas, new CoinPurse(100, 100, 100),
+                "Белый", staff, 95, 200, 80, 500, 500);
+
+        Spell fireball = new Spell("Огонь", 50, SpellType.Attack, 40);
+        gandalf.castSpell(fireball, orc);
+
+        Letter letter;
+        try {
+            letter = new Letter("Письмо", "Запечатано", 10, "Важное", "Текст", aragorn, gandalf);
+        } catch (InventoryFullException e) {
+            System.out.println(e.getMessage());
+            return;
+        }
+        try {
+            letter.entrustTo(frodo);
+        } catch (InventoryFullException e) {
+            System.out.println(e.getMessage());
+            return;
+        }
+        frodo.moveTo(minas);
+
+        EventsManager.getInstance().executeEvents();
     }
 }

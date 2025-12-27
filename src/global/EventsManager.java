@@ -3,6 +3,8 @@ package global;
 import java.util.ArrayList;
 import java.util.List;
 
+import characters.Character;
+
 public class EventsManager {
     private static EventsManager instance;
     private final List<Event> listOfEvents;
@@ -22,9 +24,19 @@ public class EventsManager {
 
     public void executeEvents() {
         for (Event event : listOfEvents) {
-            System.out.println("Event: " + event.getDescription());
-            System.out.println("Reason: " + event.getEventReason());
-            System.out.println();
+            if (event.reasonOfEvent() == enums.Reason.Magic) {
+                ManaSource.getInstance().setManaBonus(event.location(), 100);
+            }
+
+            for (Character participant : event.participants()) {
+                if (event.reasonOfEvent() == enums.Reason.SawSomething) {
+                    for (Character character : event.location().getCharacters()) {
+                        if (character != participant && Math.random() > 0.5 && !character.isFear()) {
+                            character.setFear(event);
+                        }
+                    }
+                }
+            }
         }
         triggerManaSurge();
         listOfEvents.clear();
@@ -40,6 +52,6 @@ public class EventsManager {
     }
 
     public void triggerManaSurge() {
-        ManaSourse.getInstance().regenerateMana();
+        ManaSource.getInstance().regenerateMana();
     }
 }
