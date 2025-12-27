@@ -63,8 +63,7 @@ public abstract class Item {
             return false;
         Item item = (Item) o;
         return value == item.value &&
-                name.equals(item.name) &&
-                (owner != null ? owner.equals(item.owner) : item.owner == null);
+                name.equals(item.name);
     }
 
     @Override
@@ -77,10 +76,6 @@ public abstract class Item {
 
     @Override
     public String toString() {
-        return String.format("%s{name='%s', value=%d, owner=%s}",
-                getClass().getSimpleName(),
-                name,
-                value,
-                owner != null ? owner.getName() : "none");
+        return "Название: "+this.getName()+" Описание: "+this.getDescription();
     }
 }

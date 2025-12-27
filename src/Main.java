@@ -37,19 +37,11 @@ public class Main {
         bree.addBuilding(tavern);
         bree.addBuilding(shop);
 
-        OrthancTower orthanc = new OrthancTower("Ортханк",
-                "Высокая башня, построенная нуменорцами.",
-                LocationType.Fortress,
-                null);
+        OrthancTower orthanc = new OrthancTower("Ортханк", "Высокая башня, построенная нуменорцами.", LocationType.Fortress, null);
 
         Gate isengardGate = new Gate("Врата Изендгарда", "Единственный вход в Изендгард.", null);
 
-        Isengard isengard = new Isengard(
-                "Айзенгард",
-                "Каменное плато, окружённое горами.",
-                null,
-                orthanc,
-                isengardGate);
+        Isengard isengard = new Isengard("Айзенгард", "Каменное плато, окружённое горами.", null, orthanc, isengardGate);
 
         orthanc.setParentLocation(isengard);
         isengardGate.setParentLocation(isengard);
@@ -61,42 +53,36 @@ public class Main {
         CoinPurse gandalfPurse = new CoinPurse(1, 10, 50);
         Staff gandalfStaff;
         try {
-            gandalfStaff = new Staff("Посох Гэндальфа", "Старый деревянный посох",
-                    null, 100, 50, Effect.Protection, Material.Wood);
+            gandalfStaff = new Staff("Посох Гэндальфа", "Старый деревянный посох", null, 100, 50, Effect.Protection, Material.Wood);
         } catch (InventoryFullException e) {
             System.out.println(e.getMessage());
             return;
         }
 
-        Wizard gandalf = new Wizard("Гэндальф Серый", 100, bree, gandalfPurse, "Серый",
-                gandalfStaff, 10, 100, 50, 100, 100);
+        Wizard gandalf = new Wizard("Гэндальф Серый", 100, bree, gandalfPurse, "Серый", gandalfStaff, 10, 100, 50, 100, 100);
         bree.addCharacter(gandalf);
 
         CoinPurse innkeeperPurse = new CoinPurse(10, 50, 200);
-        Human innkeeper = new Human("Барлиман Баттербур", 50, bree, innkeeperPurse,
-                5, 10, 5);
+        Human innkeeper = new Human("Барлиман Баттербур", 50, bree, innkeeperPurse, 5, 10, 5);
         bree.addCharacter(innkeeper);
         tavern.changeOwner(innkeeper);
 
         CoinPurse sarumanPurse = new CoinPurse(1, 500, 1000);
         Staff sarumanStaff;
         try {
-            sarumanStaff = new Staff("Посох Сарумана", "Белый посох",
-                    null, 200, 80, Effect.Corruption, Material.Metal);
+            sarumanStaff = new Staff("Посох Сарумана", "Белый посох", null, 200, 80, Effect.Corruption, Material.Metal);
         } catch (InventoryFullException e) {
             System.out.println(e.getMessage());
             return;
         }
 
-        Wizard saruman = new Wizard("Саруман Белый", 150, orthanc, sarumanPurse,
-                "Белый", sarumanStaff, 20, 200, 80, 200, 200);
+        Wizard saruman = new Wizard("Саруман Белый", 150, orthanc, sarumanPurse, "Белый", sarumanStaff, 20, 200, 80, 200, 200);
         orthanc.addCharacter(saruman);
         orthanc.addWizard(saruman);
 
         MagicalRing ring;
         try {
-            ring = new MagicalRing("Кольцо силы", "Малое кольцо власти", saruman, 1000, 5,
-                    Material.MagicMetal, 10, false);
+            ring = new MagicalRing("Кольцо силы", "Малое кольцо власти", saruman, 1000, 5, Material.MagicMetal, 10, false);
         } catch (InventoryFullException e) {
             System.out.println(e.getMessage());
             return;
@@ -123,8 +109,7 @@ public class Main {
         CoinPurse guardPurse = new CoinPurse(1, 1, 10);
         Knight guard1;
         try {
-            guard1 = new Knight("Орк страж 1", 80, isengardGate, guardPurse, 20,
-                    50, 20, 2, 100, armorPrototype, swordPrototype, isengard);
+            guard1 = new Knight("Орк страж 1", 80, isengardGate, guardPurse, 20, 50, 20, 2, 100, armorPrototype, swordPrototype, isengard);
         } catch (InventoryFullException e) {
             System.out.println(e.getMessage());
             return;
@@ -139,8 +124,7 @@ public class Main {
 
         Letter letter;
         try {
-            letter = new Letter("Письмо Фродо", "Срочное сообщение",
-                    0, "Беги!", "Уходи из Шира!", gandalf, frodo);
+            letter = new Letter("Письмо Фродо", "Срочное сообщение", 0, "Беги!", "Уходи из Шира!", gandalf, frodo);
         } catch (InventoryFullException e) {
             System.out.println(e.getMessage());
             return;
@@ -164,23 +148,16 @@ public class Main {
         }
 
         isengardGate.close();
-        gandalf.setFear(new Event(List.of(gandalf), isengardGate,
-                Reason.SawSomething, "Необъяснимый страх"));
+        gandalf.setFear(new Event(List.of(gandalf), isengardGate, Reason.SawSomething, "Необъяснимый страх"));
 
         gandalf.moveTo(orthanc);
 
-        Location firstFloor = new Location("Первый этаж", "Первый этаж Ортханка.",
-                LocationType.Castle, orthanc,
-                new ArrayList<>(List.of(saruman)),
-                new ArrayList<>(List.of(orthanc))) {
+        Location firstFloor = new Location("Первый этаж", "Первый этаж Ортханка.", LocationType.Castle, orthanc, new ArrayList<>(List.of(saruman)), new ArrayList<>(List.of(orthanc))) {
         };
 
         gandalf.moveTo(firstFloor);
 
-        Location secondFloor = new Location("Второй этаж", "Второй этаж Ортханка.",
-                LocationType.Castle, orthanc,
-                new ArrayList<>(),
-                new ArrayList<>(List.of(firstFloor))) {
+        Location secondFloor = new Location("Второй этаж", "Второй этаж Ортханка.", LocationType.Castle, orthanc, new ArrayList<>(), new ArrayList<>(List.of(firstFloor))) {
         };
 
         firstFloor.addNeighboringLocation(secondFloor);
@@ -193,8 +170,7 @@ public class Main {
         gandalf.speak(saruman, "Да, пришёл. Пришёл за обещанной помощью, Саруман Белый.");
         saruman.viewReceivedMessages();
 
-        saruman.setRage(new Event(List.of(saruman),
-                orthanc, Reason.HeardSomething, "Ярость из-за обращения к Саруману"));
+        saruman.setRage(new Event(List.of(saruman), orthanc, Reason.HeardSomething, "Ярость из-за обращения к Саруману"));
 
         saruman.speak(gandalf, "Неужто за помощью, Гэндальф Серый? Кто бы мог подумать!");
         gandalf.viewReceivedMessages();
@@ -234,16 +210,14 @@ public class Main {
 
         Knight aragorn;
         try {
-            aragorn = new Knight("Арагорн", 120, minas, true, new ArrayList<>(), false, 0,
-                    new CoinPurse(50, 50, 50), 90, 50, 70, 80, 100, null, null, gondor);
+            aragorn = new Knight("Арагорн", 120, minas, true, new ArrayList<>(), false, 0, new CoinPurse(50, 50, 50), 90, 50, 70, 80, 100, null, null, gondor);
         } catch (InventoryFullException e) {
             System.out.println(e.getMessage());
             return;
         }
         Knight orc;
         try {
-            orc = new Knight("Орк", 100, minas, true, new ArrayList<>(), false, 0,
-                    new CoinPurse(0, 0, 0), 80, 0, 40, 50, 100, null, null, null);
+            orc = new Knight("Орк", 100, minas, true, new ArrayList<>(), false, 0, new CoinPurse(0, 0, 0), 80, 0, 40, 50, 100, null, null, null);
         } catch (InventoryFullException e) {
             System.out.println(e.getMessage());
             return;
@@ -299,14 +273,12 @@ public class Main {
 
         Staff staff;
         try {
-            staff = new Staff("Посох", "Магический", null, 1000, 100, Effect.Protection,
-                    Material.MagicWood);
+            staff = new Staff("Посох", "Магический", null, 1000, 100, Effect.Protection, Material.MagicWood);
         } catch (InventoryFullException e) {
             System.out.println(e.getMessage());
             return;
         }
-        Wizard gandalf = new Wizard("Гэндальф", 150, minas, new CoinPurse(100, 100, 100),
-                "Белый", staff, 95, 200, 80, 500, 500);
+        Wizard gandalf = new Wizard("Гэндальф", 150, minas, new CoinPurse(100, 100, 100), "Белый", staff, 95, 200, 80, 500, 500);
 
         Spell fireball = new Spell("Огонь", 50, SpellType.Attack, 40);
         gandalf.castSpell(fireball, orc);
