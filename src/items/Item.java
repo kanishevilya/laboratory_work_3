@@ -1,6 +1,7 @@
 package items;
 
 import characters.Character;
+import exceptions.InventoryFullException;
 
 public abstract class Item {
     protected final String name;
@@ -8,7 +9,7 @@ public abstract class Item {
     protected Character owner;
     protected int value;
 
-    public Item(String name, String description, Character owner, int value) {
+    public Item(String name, String description, Character owner, int value) throws InventoryFullException {
         this.name = name;
         this.description = description;
         this.owner = owner;
@@ -34,7 +35,7 @@ public abstract class Item {
         this.owner = owner;
     }
 
-    public void setOwner(Character owner) {
+    public void setOwner(Character owner) throws InventoryFullException {
         transferTo(owner);
     }
 
@@ -46,11 +47,40 @@ public abstract class Item {
         this.value = value;
     }
 
-    public void transferTo(Character character) {
+    public void transferTo(Character character) throws InventoryFullException {
         if (owner != null) {
             owner.removeItemFromBag(this);
         }
         owner = character;
         character.addItemToBag(this);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (!(o instanceof Item))
+            return false;
+        Item item = (Item) o;
+        return value == item.value &&
+                name.equals(item.name) &&
+                (owner != null ? owner.equals(item.owner) : item.owner == null);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = name.hashCode();
+        result = result + (owner != null ? owner.getName().hashCode() : 0);
+        result = result + value;
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%s{name='%s', value=%d, owner=%s}",
+                getClass().getSimpleName(),
+                name,
+                value,
+                owner != null ? owner.getName() : "none");
     }
 }

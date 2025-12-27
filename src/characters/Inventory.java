@@ -1,5 +1,6 @@
 package characters;
 
+import exceptions.InventoryFullException;
 import items.Item;
 import items.economy.CoinPurse;
 
@@ -7,6 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Inventory {
+    private static final int MAX_BAG_SIZE = 20;
+
     private final Character owner;
     private final List<Item> bag;
     private List<Item> equipment;
@@ -39,9 +42,16 @@ public class Inventory {
         return bag;
     }
 
-    public void addItemToBag(Item item) {
+    public void addItemToBag(Item item) throws InventoryFullException {
+        if (bag.size() >= MAX_BAG_SIZE) {
+            throw new InventoryFullException(item, bag.size(), MAX_BAG_SIZE);
+        }
         item.setOwnerWithTransfer(owner);
         bag.add(item);
+    }
+
+    public boolean isEquip(Item item) {
+        return getEquipment().contains(item);
     }
 
     public void removeItemFromBag(Item item) {

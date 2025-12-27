@@ -2,6 +2,7 @@ package items.documents;
 
 import characters.Character;
 import items.Item;
+import exceptions.InventoryFullException;
 
 public class Letter extends Item {
     protected final String title;
@@ -11,7 +12,8 @@ public class Letter extends Item {
     protected boolean isWasOpen;
     protected Character entrustTo;
 
-    public Letter(String name, String description, int value, String title, String content, Character sender, Character recipient) {
+    public Letter(String name, String description, int value, String title, String content, Character sender,
+            Character recipient) throws InventoryFullException {
         super(name, description, sender, value);
         this.title = title;
         this.content = content;
@@ -25,12 +27,12 @@ public class Letter extends Item {
     }
 
     public String read() {
-        isWasOpen=true;
+        isWasOpen = true;
         return content;
     }
 
-    public void write(String content){
-        this.content += content;
+    public void write(String content) {
+        this.content = content;
     }
 
     public Character getSender() {
@@ -41,9 +43,9 @@ public class Letter extends Item {
         return recipient;
     }
 
-    public void entrustTo(Character character){
+    public void entrustTo(Character character) throws InventoryFullException {
+        this.entrustTo = character;
         super.transferTo(character);
-        entrustTo=character;
     }
 
 }

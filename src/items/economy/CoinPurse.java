@@ -36,9 +36,9 @@ public class CoinPurse {
         copper = total % CopperInSilver;
     }
 
-    private boolean spendValue(int amount, int mult) {
+    private boolean spendValue(int amount) {
         int total = getTotalInCopper();
-        int valInCopper = amount * mult;
+        int valInCopper = amount;
         if (total < valInCopper)
             return false;
         total -= valInCopper;
@@ -47,7 +47,7 @@ public class CoinPurse {
     }
 
     public boolean spendCopper(int amount) {
-        return spendValue(amount, 1);
+        return spendValue(amount);
     }
 
 }

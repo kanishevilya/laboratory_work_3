@@ -74,4 +74,10 @@ public abstract class Location {
             location.addNeighboringLocation(this);
         }
     }
+
+    public String observeLocation(){
+        return "Name: "+ getName()+ " characters count in location "
+                +getCharacters().size()+" Description: "+getDescription()
+                +" Location Type: "+getLocationType();
+    }
 }
