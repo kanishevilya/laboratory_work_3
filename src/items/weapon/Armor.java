@@ -3,6 +3,7 @@ package items.weapon;
 import characters.Character;
 import enums.Material;
 import items.Item;
+import exceptions.InventoryFullException;
 
 public class Armor extends Item implements WeaponPrototype {
     protected int protection;
@@ -10,14 +11,14 @@ public class Armor extends Item implements WeaponPrototype {
     protected Material material;
 
     public Armor(String name, String description, Character owner, int value, int protection, int weight,
-            Material material) {
+            Material material) throws InventoryFullException {
         super(name, description, owner, value);
         this.protection = protection;
         this.weight = weight;
         this.material = material;
     }
 
-    private Armor(Armor armor, Character owner) {
+    private Armor(Armor armor, Character owner) throws InventoryFullException {
         super(armor.getName(), armor.getDescription(), owner, armor.getValue());
         this.setProtection(armor.getProtection());
         this.setWeight(armor.getWeight());
@@ -49,7 +50,7 @@ public class Armor extends Item implements WeaponPrototype {
     }
 
     @Override
-    public Armor clone(Character owner) {
+    public Armor clone(Character owner) throws InventoryFullException {
         return new Armor(this, owner);
     }
 }
