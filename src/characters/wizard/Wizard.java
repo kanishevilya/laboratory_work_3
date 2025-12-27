@@ -1,16 +1,14 @@
 package characters.wizard;
 
 import characters.Character;
-import global.ManaSourse;
+import exceptions.InventoryFullException;
+import global.ManaSource;
 import items.economy.CoinPurse;
 import items.magical.Spell;
 import items.magical.Staff;
 import locations.Location;
 
 import java.util.ArrayList;
-import java.util.List;
-import global.Event;
-import enums.Reason;
 
 public class Wizard extends Character implements MagicUser {
     protected final String title;
@@ -27,7 +25,6 @@ public class Wizard extends Character implements MagicUser {
         super(name, health, currentLocation, true, new ArrayList<>(), false, 0, coinPurse);
         this.title = title;
         this.staff = staff;
-        staff.setOwner(this);
         this.magicalRank = magicalRank;
         this.maxOneTimeManaForUse = maxOneTimeManaForUse;
         this.magicalDefence = magicalDefence;
@@ -39,12 +36,11 @@ public class Wizard extends Character implements MagicUser {
         return title;
     }
 
-
     public Staff getStaff() {
         return staff;
     }
 
-    public void setStaff(Staff staff) {
+    public void setStaff(Staff staff) throws InventoryFullException {
         this.staff = staff;
         staff.setOwner(this);
     }
@@ -77,7 +73,8 @@ public class Wizard extends Character implements MagicUser {
     @Override
     public boolean castSpell(Spell spell, Character character) {
         rechangeMana();
-        if (spell.manaCost() > getMaxOneTimeManaForUse()) {
+
+        if (spell.manaCost() > getMaxOneTimeManaForUse() || spell.manaCost() > getCurrentMana()) {
             return false;
         }
 
@@ -85,28 +82,14 @@ public class Wizard extends Character implements MagicUser {
             currentMana -= spell.manaCost();
 
             int spellPower = spell.power();
-            if (staff != null) {
-                spellPower = staff.amplifySpell(spell);
-                staff.invokeSpecialEffect(character);
+
+            if (getStaff() != null) {
+                spellPower = getStaff().amplifySpell(spell);
+                getStaff().invokeSpecialEffect(character);
             }
-            switch (spell.spellType()) {
-                case Attack:
-                    character.setHealth(character.getHealth() - spellPower);
-                    break;
-                case Heal:
-                    character.heal(spellPower);
-                    break;
-                case Fear:
-                    character.setFear(
-                            new Event(List.of(this, character), currentLocation, Reason.Magic, "Fear spell cast"));
-                    break;
-                case Buff:
-                    character.setFatigue(character.getFatigue() - spellPower);
-                    break;
-                case Debuff:
-                    character.setFatigue(character.getFatigue() + spellPower);
-                    break;
-            }
+
+            spell.effect().apply(this, character, spellPower, getStaff());
+
             return true;
         } else {
             return false;
@@ -116,7 +99,7 @@ public class Wizard extends Character implements MagicUser {
     @Override
     public void rechangeMana() {
         int amountToTake = maxMana - currentMana;
-        int taken = ManaSourse.getInstance().takeMana(currentLocation, amountToTake);
+        int taken = ManaSource.getInstance().takeMana(currentLocation, amountToTake);
         currentMana += taken;
     }
 

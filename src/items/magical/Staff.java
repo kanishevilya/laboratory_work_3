@@ -6,6 +6,7 @@ import characters.wizard.Wizard;
 import enums.Effect;
 import enums.Material;
 import items.Item;
+import exceptions.InventoryFullException;
 
 public class Staff extends Item {
     protected final int powerLvl;
@@ -13,7 +14,7 @@ public class Staff extends Item {
     protected final Material material;
 
     public Staff(String name, String description, Character owner, int value, int powerLvl, Effect effect,
-            Material material) {
+            Material material) throws InventoryFullException {
         super(name, description, owner, value);
         this.powerLvl = powerLvl;
         this.effect = effect;
@@ -21,7 +22,7 @@ public class Staff extends Item {
     }
 
     public int amplifySpell(Spell spell) {
-        return (material==Material.MagicWood ? 5:0)+ spell.power() + powerLvl;
+        return (material == Material.MagicWood ? 5 : 0) + spell.power() + powerLvl;
     }
 
     public void invokeSpecialEffect(Character target) {
