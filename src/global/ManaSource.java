@@ -5,22 +5,22 @@ import locations.Location;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ManaSourse {
-    private static ManaSourse instance;
+public class ManaSource {
+    private static ManaSource instance;
     private static int totalMana;
     private static int manaRegenerationRate;
     private static Map<Location, Integer> bonusOfManaInLocations;
 
-    private ManaSourse(){
+    private ManaSource(){
         totalMana = 1000;
         manaRegenerationRate = 10;
         bonusOfManaInLocations = new HashMap<>();
     }
 
 
-    public static ManaSourse getInstance(){
+    public static ManaSource getInstance(){
         if(instance == null){
-            instance = new ManaSourse();
+            instance = new ManaSource();
         }
         return instance;
     }
