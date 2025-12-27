@@ -1,13 +1,13 @@
 package characters;
 
 import buildings.Building;
+import exceptions.InventoryFullException;
 import items.Item;
 import items.economy.CoinPurse;
 import locations.Location;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import global.Event;
 
@@ -21,7 +21,6 @@ public abstract class Character {
     protected final Inventory inventory;
     protected final DialogueHelper dialogueHelper;
 
-    // todo: 1
     protected final CharacterState fearState;
     protected final CharacterState rageState;
     protected int fatigue;
@@ -54,9 +53,8 @@ public abstract class Character {
         inventory.unEquipItem(item);
     }
 
-    // TODO: 2
-    public List<Item> getEquipment() {
-        return inventory.getEquipment();
+    public boolean isEquip(Item item) {
+        return inventory.isEquip(item);
     }
 
     public void setEquipment(List<Item> equipment) {
@@ -87,7 +85,7 @@ public abstract class Character {
         return inventory.getBag();
     }
 
-    public void addItemToBag(Item item) {
+    public void addItemToBag(Item item) throws InventoryFullException {
         inventory.addItemToBag(item);
     }
 
@@ -122,7 +120,8 @@ public abstract class Character {
     public void setFear(Event reason) {
         fearState.setState(true, reason);
     }
-    public void removeFear(){
+
+    public void removeFear() {
         fearState.setState(false, null);
     }
 
@@ -130,17 +129,24 @@ public abstract class Character {
         rageState.setState(true, reason);
     }
 
+    public boolean isRage() {
+        return rageState.getStateStatus();
+    }
+
+    public void removeRage() {
+        rageState.setState(false, null);
+    }
+
+    public Event getRageReason() {
+        return rageState.getStateReason();
+    }
+
     public void setFatigue(int fatigue) {
         this.fatigue = fatigue;
     }
 
-    public Map<Character, List<String>> getReceivedMessages() {
-        return dialogueHelper.getReceivedMessages();
-    }
-
-
     public void heal(int additionalHealth) {
-        if(isFear()){
+        if (isFear()) {
             removeFear();
         }
         if (health + additionalHealth > maxHealth) {
@@ -151,7 +157,6 @@ public abstract class Character {
     }
 
     public void moveTo(Location location) {
-        // TODO: 3
         if (inaccessibleLocations.contains(location) || !isAlive()) {
             return;
         }
@@ -177,8 +182,11 @@ public abstract class Character {
         return !inaccessibleLocations.contains(location);
     }
 
-    public void observe(Building building){
+    public void observe(Building building) {
         System.out.println(building.observeBuilding());
     }
 
+    public void observe(Location location) {
+        System.out.println(location.observeLocation());
+    }
 }

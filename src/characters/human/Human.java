@@ -54,8 +54,19 @@ public class Human extends Character {
     }
 
     public void attack(Character opponent) {
-        opponent.setHealth(Math.max(0, opponent.getHealth()-strength));
-        if(opponent.getHealth()==0){
+        int damage = strength;
+
+        if (isRage()) {
+            damage = (int) (damage * 1.5);
+            physicalDefense = (int) (physicalDefense * 0.7);
+        }
+
+        if (isFear()) {
+            return;
+        }
+
+        opponent.setHealth(Math.max(0, opponent.getHealth() - damage));
+        if (opponent.getHealth() == 0) {
             opponent.setAlive(false);
         }
     }
