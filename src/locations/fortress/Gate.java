@@ -55,10 +55,10 @@ public class Gate extends Location {
             Location parent = getParentLocation();
             Country gateCountry = null;
 
-            if (parent instanceof Country) {
-                gateCountry = (Country) parent;
-            } else if (parent instanceof Isengard isengard) {
+            if (parent instanceof Isengard isengard) {
                 gateCountry = isengard;
+            } else if (parent instanceof Country) {
+                gateCountry = (Country) parent;
             }
 
             if (gateCountry != null && knight.getCountryOfSubordinate() != null) {

@@ -13,6 +13,8 @@ import items.economy.CoinPurse;
 import items.magical.MagicalRing;
 import items.magical.Spell;
 import items.magical.Staff;
+import items.magical.effects.staff.CorruptionEffect;
+import items.magical.effects.staff.ProtectionEffect;
 import items.weapon.Armor;
 import items.weapon.Sword;
 import locations.Location;
@@ -53,7 +55,7 @@ public class Main {
         CoinPurse gandalfPurse = new CoinPurse(1, 10, 50);
         Staff gandalfStaff;
         try {
-            gandalfStaff = new Staff("Посох Гэндальфа", "Старый деревянный посох", null, 100, 50, Effect.Protection, Material.Wood);
+            gandalfStaff = new Staff("Посох Гэндальфа", "Старый деревянный посох", null, 100, 50, Material.Wood, new ProtectionEffect());
         } catch (InventoryFullException e) {
             System.out.println(e.getMessage());
             return;
@@ -70,7 +72,7 @@ public class Main {
         CoinPurse sarumanPurse = new CoinPurse(1, 500, 1000);
         Staff sarumanStaff;
         try {
-            sarumanStaff = new Staff("Посох Сарумана", "Белый посох", null, 200, 80, Effect.Corruption, Material.Metal);
+            sarumanStaff = new Staff("Посох Сарумана", "Белый посох", null, 200, 80, Material.Metal, new CorruptionEffect());
         } catch (InventoryFullException e) {
             System.out.println(e.getMessage());
             return;
@@ -182,7 +184,6 @@ public class Main {
     }
 
     private static void demo() {
-        System.out.println("Демо остальных функций");
         Country gondor = new Country("Гондор", "Королевство людей", null, null);
         City minas = new City("Минас Тирит", "Столица Гондора", gondor, gondor);
 
@@ -273,7 +274,7 @@ public class Main {
 
         Staff staff;
         try {
-            staff = new Staff("Посох", "Магический", null, 1000, 100, Effect.Protection, Material.MagicWood);
+            staff = new Staff("Посох", "Магический", null, 1000, 100, Material.MagicWood, new ProtectionEffect());
         } catch (InventoryFullException e) {
             System.out.println(e.getMessage());
             return;

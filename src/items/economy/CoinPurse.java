@@ -1,5 +1,7 @@
 package items.economy;
 
+import java.util.Objects;
+
 public class CoinPurse {
     public static final int CopperInSilver = 100;
     public static final int CopperInGold = 1000;
@@ -38,10 +40,9 @@ public class CoinPurse {
 
     private boolean spendValue(int amount) {
         int total = getTotalInCopper();
-        int valInCopper = amount;
-        if (total < valInCopper)
+        if (total < amount)
             return false;
-        total -= valInCopper;
+        total -= amount;
         convertValues(total);
         return true;
     }
@@ -50,4 +51,14 @@ public class CoinPurse {
         return spendValue(amount);
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof CoinPurse coinPurse)) return false;
+        return gold == coinPurse.gold && silver == coinPurse.silver && copper == coinPurse.copper;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(gold, silver, copper);
+    }
 }

@@ -57,11 +57,12 @@ public abstract class Item {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o)
+        if (this == o) {
             return true;
-        if (!(o instanceof Item))
+        }
+        if (!(o instanceof Item item)) {
             return false;
-        Item item = (Item) o;
+        }
         return value == item.value &&
                 name.equals(item.name);
     }
